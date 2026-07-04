@@ -33,21 +33,29 @@
   vegada. Amb `--watch` es queda viu també per a agents — verificat: després
   de 10 s el procés segueix a "Waiting for file changes…".
 - El repo del curs està a l'**estadi 0: SENSE `CLAUDE.md`**. La plantilla de
-  referència de l'instructor viu a `workshop/_CLAUDE.md` (el prefix `_` fa que
-  Claude no la detecti). El CLAUDE.md real es construeix en directe en aquesta
+  referència de l'instructor viu a `workshop/informacion-extra.ts` (contingut
+  markdown amb extensió .ts i nom anodí perquè Claude no el llegeixi en explorar). El CLAUDE.md real es construeix en directe en aquesta
   demo amb `/init` + refinament.
 
-**Guió de la demo:**
+**Guió de la demo — Part A: el parany dels tests (5 min):**
 1. Prompt: «Executa els tests» → Claude prova `npm test` → es queda penjat en
    watch fins al timeout de Bash (~2 min). Cronometrar i comentar.
-2. `/init` per generar la base del CLAUDE.md + afegir a mà:
-   ```markdown
-   ## Tests
-   - Executa SEMPRE els tests amb `cd app && npm run test:unit`.
-   - No facis servir `npm test`: arrenca Vitest en mode watch i es queda bloquejat.
-   ```
+2. `/init` per generar la base del CLAUDE.md + afegir la regla amb l'**atajo `#`**
+   (Claude la incorpora sol al CLAUDE.md):
+   > `# els tests s'executen SEMPRE amb npm run test:unit; npm test arrenca
+   > Vitest en mode watch i es queda bloquejat`
 3. `/clear` + mateix prompt → directe i verd en segons (~200 ms de Vitest).
-4. Missatge: el CLAUDE.md és la memòria operativa del repo.
+
+**Guió de la demo — Part B: ràfega de regles (5 min):**
+4. **Idioma**: «Respon SEMPRE en català» → `/clear` → la primera frase canvia
+   d'idioma. (30 segons, impacte immediat.)
+5. **Zona prohibida**: «No toquis mai `app/src/lib/data/`» → «Canvia el nom de
+   la professora Ana Martín» → s'hi nega i ho explica.
+6. **Sembrades sense provar** (es cobren més tard):
+   - «No executis mai `npm run dev`: el servidor ja corre al port 3000».
+   - «Commits en format convencional i en català» (es veu al 3.3).
+7. Tancament: el CLAUDE.md **persuadeix**; al STEP5, hooks i permisos
+   **obliguen**. Estat final = `informacion-extra.ts` de referència + regla de tests.
 
 ## Demo — 1.4 Edita una feature + comparativa de models (8 min)
 

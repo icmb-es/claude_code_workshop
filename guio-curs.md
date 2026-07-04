@@ -12,7 +12,7 @@
 
 | Branca | Contingut |
 |---|---|
-| `main` | Estadi 0: app funcional + Vitest amb el **parany del mode watch** (`npm test` vs `npm run test:unit`) + **sense `CLAUDE.md`** (la plantilla de referència viu a `_CLAUDE.md`, que Claude no detecta; el CLAUDE.md real es construeix al 1.3) |
+| `main` | Estadi 0: app funcional + Vitest amb el **parany del mode watch** (`npm test` vs `npm run test:unit`) + **sense `CLAUDE.md`** (la plantilla de referència viu a `informacion-extra.ts` (contingut markdown amb extensió .ts i nom anodí perquè Claude no el llegeixi en explorar); el CLAUDE.md real es construeix al 1.3) |
 | `01-fonaments-final` | Resultat del bloc 1: `CLAUDE.md` enriquit (tests, lint) + filtre per professor |
 | `02-bug-chrome` | **Bug intencionat** per a la demo del MCP de Chrome |
 | `02-bug-chrome-solucio` | Bug arreglat |
@@ -125,20 +125,24 @@ La família Claude i el criteri d'elecció: **Haiku** (ràpid i barat, tasques m
 2. Les comandes del dia a dia, provant-les en directe: `/model`, `/cost`, `/clear` (reiniciar context), `/compact` (resumir una conversa llarga i per què degrada), **mode pla** (shift+tab), i el sistema de permisos (per què demana confirmació).
 
 ### 1.3 CLAUDE.md: d'un repo mut a un repo que s'explica (10 min)
-**El primer exemple del curs, amb diferència mesurable.** El repo porta Vitest configurat amb un parany realista: `npm test` arrenca Vitest en **mode watch** (es queda penjat esperant canvis); la comanda correcta és `npm run test:unit` (`vitest run`).
+**El primer exemple del curs, amb diferència mesurable.** El repo està a l'estadi 0 (sense CLAUDE.md; la plantilla de referència de l'instructor és `informacion-extra.ts` (contingut markdown amb extensió .ts i nom anodí perquè Claude no el llegeixi en explorar)) i porta Vitest amb un parany realista: `npm test` arrenca el **mode watch** (es queda penjat); la comanda correcta és `npm run test:unit`.
 
-1. **Sense CLAUDE.md** (l'estadi 0 del repo: no n'hi ha cap; la plantilla de referència de l'instructor és `_CLAUDE.md`, que Claude no detecta):
+**Part A — el parany dels tests (5 min):**
+1. Sense CLAUDE.md:
    > «Executa els tests»
 
-   Claude explora, prova `npm test` → es queda en mode watch (cal interrompre'l) o es perd provant coses. Cronometrar-ho.
-2. Generar la base amb `/init` i **refinar-la a mà** afegint la secció:
-   ```markdown
-   ## Tests
-   - Executa SEMPRE els tests amb `cd app && npm run test:unit`.
-   - No facis servir `npm test`: arrenca Vitest en mode watch i es queda bloquejat.
-   ```
+   Claude explora, prova `npm test` → es queda en mode watch (cal interrompre'l). Cronometrar-ho.
+2. Generar la base amb `/init`, i afegir la regla amb l'**atajo `#`** (s'escriu al xat i Claude la incorpora sol al CLAUDE.md):
+   > `# els tests s'executen SEMPRE amb npm run test:unit; npm test arrenca Vitest en mode watch i es queda bloquejat`
 3. `/clear` i repetir exactament el mateix prompt → va directe, verd, en segons.
-4. Missatge: **el CLAUDE.md és la memòria operativa del repo** — passem d'un repo sense informació a un repo que explica com es treballa amb ell (tests, lint, convencions). És el mateix mecanisme que fa que més tard executi el lint sol.
+
+**Part B — ràfega de regles: què més es pot forçar (5 min):**
+4. **Idioma**: afegir «Respon SEMPRE en català» → `/clear` → qualsevol pregunta: la primera frase ja surt en català. (Impacte immediat, 30 segons.)
+5. **Zona prohibida**: afegir «No toquis mai `app/src/lib/data/` (dades de demo)» → demanar «Canvia el nom de la professora Ana Martín» → s'hi nega i ho explica.
+6. **Dues regles més que es deixen sembrades** (es cobraran més tard, sense provar-les ara):
+   - «No executis mai `npm run dev`: el servidor ja corre al port 3000» (evita el clàssic segon servidor al 3001 durant tot el dia).
+   - «Commits en format convencional i en català» (es veurà al primer commit del 3.3).
+7. Missatge de tancament: **el CLAUDE.md és la memòria operativa del repo** — persuadeix el model. A la tarda (STEP5) veurem el nivell següent: hooks i permisos, que **obliguen** en lloc de persuadir. L'estat final d'aquesta demo = el `informacion-extra.ts` de referència (idioma, zona prohibida, servidor, commits, lint) **+ la regla de tests creada en directe amb `#`**.
 
 ### 1.4 Edita una feature + comparativa de models (8 min)
 Dos ocells d'un tret: el primer canvi de codi real, fet **per grups amb models diferents** (`/model haiku` / `sonnet` / `opus` / `fable`). En mode pla:
