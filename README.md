@@ -12,16 +12,16 @@ El **guió complet del curs** viu aquí: [`guio-curs.md`](guio-curs.md).
 
 ## Estructura
 
-| Carpeta | Bloc del curs | Durada |
+| Carpeta | Bloc del curs | Horari |
 |---|---|---|
-| `STEP0/` | Presentació: la IA avui + instal·lació de l'entorn | 40 min |
-| `STEP1/` | Introducció a Claude Code (models, comandes, CLAUDE.md) | 30 min |
-| `STEP2/` | MCP: Chrome DevTools, Claude Design i landing | 45 min |
-| `STEP3/` | Muntar el backend + skills de tests i ship | 60 min |
-| `STEP4/` | Deploy a Vercel + SEO + vídeo amb Remotion | 30 min |
-| `STEP5/` | Automatització: loop, ultracode, `/goal`, routines | 55 min |
-| `STEP6/` | Mòdul extra: OpenSpec (spec-driven development) | 15 min |
-| `STEP7/` | Tancament i Q&A | 10 min |
+| `STEP0/` | H1 · Benvinguda + configuració completa | 0:00–1:00 |
+| `STEP1/` | H2 · Introducció a Claude Code: conceptes i context | 1:00–2:00 |
+| `STEP2/` | H3a · MCPs, els ulls de Claude: Chrome DevTools + Postgres | 2:00–2:40 |
+| `STEP3/` | H3b · Construir: backend (Opus+pla) + login (fitxer de context) | 2:55–3:35 |
+| `STEP4/` | H4 · Skills i Hooks: tests, ship, hook de lint, vídeo amb Remotion | 3:35–4:05 |
+| `STEP5/` | H5a · Producte: Claude Cowork + Claude Design (landing) | 4:05–4:30 |
+| `STEP6/` | H5b · Automatització final: loop, ultracode, /goal, OpenSpec | 4:30–4:55 |
+| `STEP7/` | Tancament: /goal + vídeos de Remotion | 4:55–5:00 |
 
 Cada carpeta té un `notes.md` amb el contingut punt per punt (slides, prompts
 de demo, checklist de preparació). A partir d'aquestes notes es generen les

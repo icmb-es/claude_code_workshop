@@ -1,50 +1,53 @@
-# STEP 4 — Deploy a Vercel + SEO + vídeo amb Remotion (30 min)
+# STEP 4 — H4 · Skills i Hooks: empaquetar i obligar (30 min, 3:35–4:05)
 
-> El deploy va ABANS de l'automatització a propòsit: així al STEP5 cada merge
-> del loop acaba a producció sol.
+> Crear-ne dues, instal·lar-ne una de tercers — i cada alumne se'n va amb un
+> vídeo fet.
 
-## Demo — 4.1 Deploy a Vercel (15 min)
+## Demo — 4.1 Skill de tests + agents (10 min)
 
-1. Cada alumne importa el seu fork a Vercel (root directory: `app/`).
-2. **Backend a producció** (demo instructor): projecte connectat a Vercel
-   Postgres/Supabase reutilitzant els SQL de `bd/` tal qual (ja són Postgres).
-3. Tancar el primer cercle: **mergear la PR del backend** (la del /ship del 3.3)
-   → Vercel redesplega sol.
-4. Frase clau: *"a partir d'ara, tot el que es mergegi a main acaba a producció
-   sense tocar res — recordeu-ho al STEP5."*
-5. Pla B: `vercel deploy` per CLI o el deploy de l'instructor.
+- Concepte + anatomia: `.claude/skills/tests/SKILL.md`.
+  > «/tests — cobreix l'API de reserves (crear, llistar, cancel·lar,
+  > solapament → 409) i l'auth (registre, login bo i dolent, ruta protegida).»
+- Agents: `test-writer.md` (Sonnet, medium) i `test-verifier.md` (Haiku, low)
+  — context propi, paral·lel, model al frontmatter.
 
-## Demo — 4.2 Anàlisi SEO de la landing (7 min)
+## Demo — 4.2 Skill /ship (6 min)
 
-- **Presentar skills.sh** (directori de skills de la comunitat): les pròpies
-  viuen a `.claude/skills/` del repo (STEP3); les de tercers es descarreguen:
-  ```bash
-  npx skills add <ref-skill-seo>
-  ```
-- Prompt:
-  > «/seo — analitza la landing: metadades, estructura de headings, schema.org,
-  > rendiment.»
-- Aplicar 1-2 correccions ràpides. Checkpoint: `04-deploy`.
+- branca → lint → tests → commit convencional → push → PR (`gh pr create`).
+  > «/ship el backend amb el login»
+- Checkpoint: `04-skills`.
 
-## Demo — 4.3 Vídeo amb Remotion (8 min — demo instructor)
+## Demo — 4.3 Hooks: quan persuadir no és suficient (6 min)
 
-- Instal·lar la skill de Remotion des de skills.sh.
-  > «/remotion — crea un vídeo promocional de 15 segons de l'app: logo,
-  > 3 captures de pantalla amb transicions i el CTA final.»
-- El render triga: llançar-lo, explicar la skill mentre renderitza, reproduir
-  el vídeo en acabar el bloc.
-- Pla B: vídeo pre-renderitzat.
+- L'arc de H2 es tanca: **CLAUDE.md persuadeix; el hook obliga** (l'executa el
+  harness, no el model).
+- Afegir en directe a `.claude/settings.json` un hook **PostToolUse** que passa
+  el lint després de cada edició i bloqueja si falla.
+- Demo determinista: demanar un canvi amb error de lint → el hook salta sol →
+  Claude corregeix sense que ningú l'hi demani.
+- Mencionar PreToolUse (vetar edicions a `src/lib/data/` — la zona prohibida
+  com a llei) i els permisos allow/deny.
+- Pont: aquest hook + allowlist = el que fa segur el /goal de H5b.
 
-## Models i effort d'aquest STEP
+## Demo — 4.4 skills.sh + el teu vídeo amb Remotion (8 min)
+
+- Presentar skills.sh: pròpies al repo, de tercers descarregades:
+  `npx skills add <ref-remotion>`.
+- **Cada alumne genera el seu vídeo**:
+  > «/remotion — vídeo promocional de 15 segons de l'app: logo, 3 captures amb
+  > transicions i CTA final.»
+- El render corre en segon pla → es reprodueixen al tancament.
+
+## Models i effort
 
 | Tasca | Model | Effort |
 |---|---|---|
-| 4.1 Deploy a Vercel | Sonnet | low |
-| 4.2 Anàlisi SEO | Sonnet | medium |
-| 4.3 Vídeo Remotion | Sonnet | medium |
+| 4.1 Skill tests | Sonnet | medium |
+| 4.2 /ship | Haiku | low |
+| 4.3 Demo del hook | Sonnet | low |
+| 4.4 Remotion | Sonnet | medium |
 
 ## Material / pendents
 
-- [ ] Projecte de l'instructor a Vercel amb Postgres/Supabase ja connectat.
-- [ ] Refs exactes de skills.sh (seo, remotion) documentades al README del curs.
-- [ ] Vídeo de Remotion pre-renderitzat (pla B).
+- [ ] Skills `tests` i `ship` + 2 agents escrits i assajats (branca `04-skills`).
+- [ ] Ref exacta de skills.sh per a Remotion + vídeo pre-renderitzat (pla B).

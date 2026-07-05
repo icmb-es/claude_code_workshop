@@ -1,57 +1,47 @@
-# STEP 2 — MCP: Chrome DevTools, Claude Design i landing (45 min)
+# STEP 3 — H3b · Construir: backend + login corporatiu (40 min, 2:55–3:35)
 
-> Notes per a slides + guió de les demos. Detall complet al guió
-> (`claude_workshop_ensenyament/workshop/docs/guio-curs.md`).
+> Dues maneres de dirigir Claude: mode pla + Opus per DESCOBRIR; fitxer de
+> context per EXECUTAR una especificació.
 
-## Slides — 2.1 Què és MCP (5 min)
+## Demo — 3b.1 Backend amb Opus + mode pla (25 min)
 
-- Protocol estàndard per connectar Claude amb eines externes.
-- Config: `.mcp.json` (compartida al repo) o `claude mcp add`.
-- Diagrama per a slide: Claude Code ⟷ servidor MCP ⟷ eina (navegador, Figma…).
+- `/model opus` (high) + mode pla. Claude té els ulls del MCP: llegeix
+  l'esquema real abans de proposar.
+  > «Aquesta app funciona amb mock a localStorage, i tenim una BD Postgres real
+  > ja configurada a .env (DATABASE_URL). Munta el backend:
+  > 1. Route handlers a app/src/app/api/ per a reserves (GET/POST/DELETE) i
+  >    professors (GET), connectats a Postgres amb pg.
+  > 2. Respecta l'esquema existent i la regla del solapament (índex únic → 409).
+  > 3. Migra src/lib/services/ a fetch sense tocar la UI.
+  > 4. Verifica-ho creant una reserva des de l'app.»
+- Negociar el pla («no toquis el login — ve ara», «mantén types.ts»).
+- Verificació: la reserva apareix a la BD compartida; es veuen les dels
+  companys; xoc de reserves = 409 en viu (feature, no bug).
+- Pla B: `03-backend`.
 
-## Demo — 2.2 Caçar un bug amb el MCP de Chrome (18 min)
+## Demo — 3b.2 Login corporatiu amb fitxer de context (15 min)
 
-- `git checkout 02-bug-chrome` — bug preparat: en seleccionar franja, error a
-  consola i la reserva no es crea (p. ex. `slot.hora` arriba `undefined`).
-- Reproduir-lo a mà primer: *sembla que "no fa res"*.
-- Prompt:
-  > «A la pàgina de reservar, quan selecciono una franja i confirmo, no es crea
-  > la reserva. Obre l'app al navegador, reprodueix el problema, llegeix la
-  > consola i les peticions, troba la causa i arregla-la.»
-- Moment wow: navega, llegeix la consola, arregla i **re-verifica al navegador**.
-- Pla B: branca `02-bug-chrome-solucio`.
+- El repo porta `docs/login-corporatiu.md`: el "paràgraf enorme" de plataforma
+  amb TOT: taula users, next-auth (versió fixada), Credentials + JWT
+  (contrasenya en pla: decisió del curs), fitxers exactes (handler
+  [...nextauth], middleware.ts substituint protected-route, SessionProvider
+  substituint auth-context, POST /api/register), AUTH_SECRET (ja a .env).
+  > «@docs/login-corporatiu.md — implementa el login corporatiu tal com descriu
+  > aquest document i verifica registre, login i logout al navegador.»
+- Contrast: a 3b.1 Opus descobria; aquí el context fa la feina → Sonnet n'hi
+  ha prou. Nivell 2 del context (H2).
+- Verificació: sessió sobreviu al refresc; /dashboard sense login → redirigit.
+- Pla B: `03-login`.
 
-## Demo — 2.3 Design system amb Claude Design (8 min)
-
-- **Claude Design** = canvas visual (claude.ai/design, Anthropic Labs).
-- `/design-sync` a Claude Code (bidireccional): importar la component library
-  real (`src/components/ui/`) al canvas.
-- Missatge: el que es dissenyi al canvas usarà els components DE VERITAT.
-
-## Demo — 2.4 Landing amb Claude Design (14 min)
-
-- Al xat del canvas:
-  > «Dissenya una landing page per a l'app de reserva de sessions de treball:
-  > hero, beneficis, llista de professors destacats i CTA cap al registre.
-  > Distintiva i moderna, no genèrica.»
-- Iterar en directe (comentaris inline, arrossegar, colors) — el moment més
-  visual del matí.
-- Handoff a codi: `/design-sync` (aprovació de pla → implementa a `/`).
-- ⚠️ La landing és matèria primera del SEO (STEP4) i del vídeo de Remotion.
-- Pla B (sense accés a Claude Design): skill `frontend-design` (oficial
-  d'Anthropic, marketplace `claude-plugins-official`).
-- Checkpoint: `02-landing`.
-
-## Models i effort d'aquest STEP
+## Models i effort
 
 | Tasca | Model | Effort |
 |---|---|---|
-| 2.2 Bug amb MCP de Chrome | Sonnet | high |
-| 2.3 /design-sync (pull) | Sonnet | low |
-| 2.4 Landing (handoff a codi) | Opus | medium |
+| 3b.1 Backend | **Opus** | **high** |
+| 3b.2 Login (context) | Sonnet | medium |
 
 ## Material / pendents
 
-- [ ] Implementar el bug a la branca `02-bug-chrome` (+ branca solució).
-- [ ] `.mcp.json` amb el servidor de Chrome DevTools al repo del curs.
-- [ ] Projecte creat a claude.ai/design i `/design-sync` provat en les dues direccions.
+- [ ] Escriure `docs/login-corporatiu.md` i assajar-lo sobre `03-backend`.
+- [ ] Assajar el backend amb Opus+pla contra el Postgres compartit (2-3 cops).
+- [ ] Branques `03-backend` i `03-login`.

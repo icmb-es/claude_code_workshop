@@ -1,42 +1,61 @@
-# STEP 6 — Mòdul extra: OpenSpec, spec-driven development (15 min)
+# STEP 6 — H5b · Automatització final (25 min, 4:30–4:55)
 
-> Mòdul autònom, fora de la narrativa principal. Mentre corre, a la màquina de
-> l'instructor el `/goal` del STEP5 continua resolent issues tot sol.
-> Si el temps no arriba: material per a casa (branca `06-openspec`).
+> El clímax: loop → issues que es creen soles → /goal. Demo guiada per
+> l'instructor; qui vulgui replica.
 
-## Slides — El concepte (3 min)
+## Concepte — git worktree (1 min, abans del loop)
 
-- La narrativa del dia ha estat **operativa**: issues = feina que arriba.
-- OpenSpec és la manera **de producte**: spec = feina pensada abans de construir.
-- Amb spec-driven, primer s'escriu el contracte complet (requisits, casos
-  límit, criteris) i les tasks se'n deriven.
-- Quan compensa: features grans, equips, projectes greenfield.
+- Normalment: 1 repo = 1 còpia de treball; `git checkout` reescriu els fitxers.
+- Un **worktree** = diverses còpies de treball del mateix repo alhora, cada una
+  en una carpeta i branca diferents, compartint el mateix `.git`:
+  - `git worktree add ../reserves-loop feature-x`
+  - `git worktree list` · `git worktree remove ../reserves-loop`
+- Per què aquí: deixar un **agent/loop treballant sol en un worktree** mentre tu
+  continues a la teva carpeta, sense conflictes. Ultracode fa servir worktrees
+  per aïllar agents que editen en **paral·lel**. També és alternativa neta al
+  `git stash` per provar un checkpoint sense perdre feina.
 
-## Demo — Hands-on (10 min)
+## Demo — 5b.1 Issues + loop (9 min)
 
-- `openspec init` (la CLI ja s'ha instal·lat al STEP0).
-- Prompt:
-  > «Crea una proposta OpenSpec per a "valoracions": els usuaris poden valorar
-  > amb 1-5 estrelles i comentari les sessions completades; nova taula a la BD,
-  > endpoints GET/POST a `/api/ratings`, i mitjana de valoracions a la targeta
-  > del professor. Desglossa-la en tasks petites i verificables.»
-- Revisar l'spec junts — el moment "aha": tot el context escrit ABANS de tocar codi.
-- Implementar la primera task guiada.
+- 2 issues del gist: «PATCH /api/reservations/:id per reprogramar + UI» i
+  «empty state al dashboard». GitHub Project.
+  > «Llista les issues obertes amb gh issue list. Agafa la més antiga,
+  > implementa-la complint els criteris, passa lint i tests, i obre una PR amb
+  > /ship que la tanqui. Continua amb la següent.»
+- Mentre corre: allowlist a `.claude/settings.json`, hook de lint, els tests
+  de H4 com a xarxa.
 
-## El pont (2 min)
+## Demo — 5b.2 Ultracode: issues que es creen soles (6 min — instructor)
 
-- Les tasks d'OpenSpec també poden alimentar un `/goal`: el mateix patró autònom
-  del STEP5 amb l'spec com a font de veritat.
-- Qui vulgui, ho té complet a la branca `06-openspec`.
+> «ultracode: audita l'app buscant bugs i accessibilitat; verifica cada
+> troballa adversarialment i obre una issue amb gh issue create per cada
+> confirmada, amb criteris d'acceptació i etiqueta 'auto'.»
 
-## Models i effort d'aquest STEP
+## Demo — 5b.3 /goal (6 min — instructor)
+
+> /goal no queda cap issue oberta amb l'etiqueta 'auto', tots els tests passen
+> i el lint surt net — o para després de 10 torns
+
+- Es deixa corrent fins al tancament. Loop = pareu vosaltres; /goal = para el
+  sistema. Menció: /schedule (el mateix, al cloud amb calendari).
+- Requereix Claude Code v2.1.139+. Pla B: `06-autobuild`.
+
+## Demo — 5b.4 OpenSpec (4 min — instructor)
+
+- `openspec init` + proposta "valoracions" desglossada en tasks; el pont amb
+  /goal. Complet a `06-openspec` (material per a casa).
+
+## Models i effort
 
 | Tasca | Model | Effort |
 |---|---|---|
-| Crear l'spec OpenSpec | Fable | high |
-| Implementar la 1a task | Sonnet | medium |
+| 5b.1 Loop | Sonnet | medium |
+| 5b.2 Ultracode | Fable | high |
+| 5b.3 /goal | Opus | high |
+| 5b.4 OpenSpec | Fable | high |
 
 ## Material / pendents
 
-- [ ] Assajar l'spec de "valoracions".
-- [ ] Branca `06-openspec` completa (també com a material per a casa).
+- [ ] Gist amb les 2 issues; settings.json amb allowlist + hook.
+- [ ] Assajar ultracode → /goal cronometrat (~25 min). Branca `06-autobuild`.
+- [ ] Branca `06-openspec` completa.

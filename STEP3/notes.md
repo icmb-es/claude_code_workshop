@@ -1,59 +1,57 @@
-# STEP 3 — Muntar el backend + skills de tests i ship (60 min)
+# STEP 2 — H3a · MCPs: els ulls de Claude (40 min, 2:00–2:40)
 
-> El mòdul estrella: l'app deixa de ser mock. Just després del descans.
+> Dos parells d'ulls: el navegador i la base de dades. Tots dos es fan servir
+> per construir a H3b.
 
-## Demo — 3.1 Backend amb mode pla (28 min)
+## Slides — 3.1 Què és MCP (5 min — PowerPoint)
 
-- Context: `bd/` ja té l'esquema SQL (Postgres) i la capa de serveis està aïllada.
-- **En mode pla** (insistir: tasca gran = SEMPRE mode pla):
-  > «Aquesta app no té backend: tot és mock a localStorage. Munta'l amb Node
-  > aprofitant Next.js:
-  > 1. Crea route handlers a `app/src/app/api/` per a reserves (GET/POST/DELETE)
-  >    i professors (GET).
-  > 2. Fes servir SQLite (better-sqlite3) com a BD local, creant esquema i seed
-  >    a partir dels SQL de `bd/` (adapta'ls de Postgres si cal).
-  > 3. Migra la capa de serveis de `src/lib/services/` a fetch, sense tocar UI.
-  > 4. Verifica-ho arrencant l'app i creant una reserva.»
-- Ensenyar a **negociar el pla** abans d'aprovar ("no toquis auth", "mantén types.ts").
-- Verificació estrella: crear reserva → mode incògnit → **persisteix** (abans no).
-- Nota tècnica: SQLite no va al serverless de Vercel → camí a producció al STEP4.
-- Pla B: branca `03-backend`.
+1. **El problema**: cada eina amb la seva integració a mida — N models × M
+   eines = explosió d'integracions.
+2. **MCP (Model Context Protocol)**: estàndard obert d'Anthropic (nov. 2024),
+   adoptat per tota la indústria — "el USB-C dels agents".
+   - Un **servidor MCP** exposa *tools* (accions) i *resources* (dades).
+   - Qualsevol **client** (Claude Code, Claude Desktop, Cowork…) s'hi connecta
+     de la mateixa manera.
+3. **Diagrama** (slide central): Claude ⟷ client MCP ⟷ servidor MCP ⟷ eina
+   (navegador, BD, Figma, Slack, GitHub…).
+4. **On es configura**:
+   - `.mcp.json` al repo → compartit amb l'equip (el nostre cas: ve donat);
+   - `claude mcp add` → personal;
+   - connectors a Claude Desktop → per a Cowork (H5a).
+5. **Seguretat** (1 frase): un MCP té el poder que li donis — per això el de
+   Postgres va amb el rol de mínims privilegis.
+6. **El que ve ara**: dos servidors ja configurats — Chrome DevTools (ulls al
+   navegador) i Postgres (ulls a la BD).
 
-## Demo — 3.2 Skill de tests + agents de test (22 min)
+## Demo — 3.2 Ulls al navegador: cas de rendiment (18 min)
 
-- **Aquí s'introdueix el concepte de skill** (primera skill del curs):
-  coneixement empaquetat a `.claude/skills/`, viatja amb el repo.
-- Anatomia: `SKILL.md` amb frontmatter (`name`, `description`) + instruccions.
-- La skill sap les convencions per testejar els endpoints (Vitest ja ve del
-  STEP1; SQLite en memòria, fixtures de professors).
-  > «/tests — cobreix l'API de reserves: crear, llistar, cancel·lar i el
-  > conflicte de solapament (ha de retornar 409).»
-- **Agents propis**: `.claude/agents/test-writer.md` (només Read/Write/Bash) i
-  `test-verifier.md` (executa i critica cobertura).
-  > «Fes servir els agents de test per cobrir l'endpoint de professors i
-  > verificar la cobertura.»
-- Missatge: els agents tenen context propi i corren en paral·lel.
-- Checkpoint: `03-skill-tests`.
+- `git checkout 02-perf`: problema preparat (imatge enorme sense optimitzar +
+  re-render continu per `setInterval`). L'app va lenta.
+- Prompt:
+  > «L'app va lenta. Obre-la al navegador, mira el rendiment (network, traces,
+  > re-renders), troba les causes i arregla-les. Verifica la millora.»
+- Moment wow: llegeix mètriques reals, arregla, torna a mesurar.
+- Pla B: `02-perf-solucio`.
 
-## Demo — 3.3 Skill /ship (10 min)
+## Demo — 3.3 Ulls a la BD: Postgres per MCP (17 min)
 
-- `.claude/skills/ship/SKILL.md`: branca → lint → tests → commit convencional →
-  push → PR amb `gh pr create`.
-  > «/ship el backend nou»
-- Cada alumne acaba amb una PR real al seu fork. Checkpoint: `03-skill-ship`.
+- Obrir `.mcp.json`: el servidor de Postgres amb el string JA posat
+  (BD compartida, rol `reservas_app`).
+- Prompts:
+  > «Quines taules hi ha? Ensenya'm l'esquema de reservations i explica'm la
+  > regla de l'índex únic. Quants professors i quines franges existeixen?»
+- Missatge: Claude no s'imagina l'esquema — el llegeix. Prepara H3b.
+- Aparta: per què `reservas_app` no pot fer DROP TABLE (mínims privilegis).
 
-## Models i effort d'aquest STEP
+## Models i effort
 
 | Tasca | Model | Effort |
 |---|---|---|
-| 3.1 Muntar el backend | **Fable** | **high** |
-| 3.2 Skill de tests | Sonnet | medium |
-| 3.2 Agent test-writer | Sonnet (frontmatter) | medium |
-| 3.2 Agent test-verifier | Haiku (frontmatter) | low |
-| 3.3 /ship | Haiku | low |
+| 3.2 Rendiment amb Chrome | Sonnet | high |
+| 3.3 Postgres per MCP | Sonnet | low |
 
 ## Material / pendents
 
-- [ ] Assajar el prompt del backend 2-3 cops de zero i cronometrar-lo.
-- [ ] Pla B si better-sqlite3 falla en compilar: `libsql` / `sql.js`.
-- [ ] Escriure les skills `tests` i `ship` + els 2 agents (branques 03-*, i a `main`).
+- [ ] Implementar el problema de rendiment a `02-perf` (+ solució) i assajar-lo.
+- [ ] `.mcp.json` amb chrome-devtools + postgres (string de `reservas_app`).
+- [ ] Aplicar els 4 scripts de `bd/` a la BD de proves.

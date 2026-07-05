@@ -1,22 +1,15 @@
-# STEP 7 — Tancament (10 min)
+# STEP 7 — Tancament (5 min, 4:55–5:00)
 
-## Guió
-
-1. **Primer de tot: revisar la demo autònoma del STEP5.**
-   - `/goal` mostra l'estat: torns, tokens, avaluació de la condició.
-   - `git log --oneline` de la branca: commits fets sols.
-   - Issues `auto` tancades al Project.
-   - Frase final: *"el sistema s'ha detectat els problemes, s'ha creat les
-     issues i se les ha resolt sol mentre parlàvem d'OpenSpec."*
-2. **Recapitulació del viatge** (slide única amb l'arc complet):
-   prompt → mode pla → MCP → Claude Design → backend real → skills → agents →
-   producció → loop supervisat → issues que es creen soles → `/goal` autònom.
-3. **Xuleta d'un full** (repartir/enllaçar): comandes, estructura `.claude/`,
-   enllaços a docs i a skills.sh.
-4. El repo queda amb totes les branques: *podeu rejugar el curs sencer a casa*.
-5. Q&A.
+1. **Revisar el /goal**: estat (torns, tokens), `git log` amb commits fets
+   sols, issues `auto` tancades. *"El sistema s'ha auditat, s'ha creat les
+   issues i se les ha resolt sol mentre miràvem Cowork i Design."*
+2. **Reproduir els vídeos de Remotion dels alumnes** — traca final.
+3. Recapitulació (1 slide): context → ulls (MCP) → construir → skills →
+   producte → autonomia.
+4. Material per a casa: `extra/deploy-vercel`, `extra/seo`, `06-openspec`.
+5. Q&A exprés.
 
 ## Material / pendents
 
-- [ ] Xuleta d'un full (PDF o markdown al repo del curs).
 - [ ] Slide de recapitulació amb l'arc del dia.
+- [ ] Branques `extra/deploy-vercel` i `extra/seo` documentades.
