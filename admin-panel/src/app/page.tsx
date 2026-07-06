@@ -6,6 +6,7 @@ import { SURVEY } from "@/lib/survey";
 
 type Participant = Record<string, boolean | string | number> & {
   email: string;
+  name: string;
   login_email: string;
   spend_pct: number;
   survey_done: boolean;
@@ -253,11 +254,10 @@ function InstallacioView({
                 className="border-b border-neutral-100 last:border-0 dark:border-neutral-900"
               >
                 <td className="whitespace-nowrap px-3 py-2">
-                  <div className="font-medium">{p.email}</div>
-                  {p.login_email && p.login_email !== p.email && (
-                    <div className="text-xs text-neutral-400">
-                      login: {p.login_email}
-                    </div>
+                  <div className="font-medium">{p.name || p.email}</div>
+                  {p.name && <div className="text-xs text-neutral-500">{p.email}</div>}
+                  {p.login_email && (
+                    <div className="text-xs text-neutral-400">login: {p.login_email}</div>
                   )}
                 </td>
                 <td className="px-3 py-2 text-center">
@@ -379,19 +379,30 @@ function UsView({ rows }: { rows: Participant[] }) {
 }
 
 /* ---------- Gestió (alta massiva + eliminar) ---------- */
-type ParsedRow = { email: string; loginEmail: string };
+type ParsedRow = { email: string; loginEmail: string; name: string };
 
 function parseBulk(text: string): ParsedRow[] {
   const out: ParsedRow[] = [];
   for (const line of text.split("\n")) {
     const t = line.trim();
     if (!t) continue;
-    const parts = t.split(/[\s,;\t]+/).filter(Boolean);
-    if (parts.length < 2) continue;
-    const [email, loginEmail] = parts;
-    // Salta la capçalera (p. ex. "EMAIL Origen destino").
+    // Separa columnes NOMÉS per tab o 2+ espais: el nom pot dur comes i
+    // espais simples (p. ex. «Cognoms, Nom») i s'ha de preservar sencer.
+    const cols = t
+      .split(/\t+| {2,}/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (cols.length < 2) continue;
+    // 1a col (Origen) = login que SORTIRÀ · 2a col (destino) = correu que
+    // l'usuari INTRODUEIX (clau) · 3a col (opcional) = nom.
+    const [loginEmail, email, name = ""] = cols;
+    // Salta la capçalera (p. ex. "EMAIL Origen destino Nom").
     if (!email.includes("@") || !loginEmail.includes("@")) continue;
-    out.push({ email: email.toLowerCase(), loginEmail: loginEmail.toLowerCase() });
+    out.push({
+      email: email.toLowerCase(),
+      loginEmail: loginEmail.toLowerCase(),
+      name,
+    });
   }
   return out;
 }
@@ -457,15 +468,17 @@ function GestioView({
           Alta massiva d&apos;usuaris
         </h2>
         <p className="mb-3 text-sm text-neutral-500">
-          Enganxa una línia per usuari: <code>email_inscripció</code> i{" "}
-          <code>email_login</code> (separats per tab, espais, coma o punt i coma). Es pot
-          incloure la capçalera; s&apos;ignora.
+          Una línia per usuari: <strong>1r</strong> el correu que ha de{" "}
+          <strong>sortir</strong> (login de Claude · «Origen»), <strong>2n</strong> el correu
+          que l&apos;usuari <strong>introdueix</strong> («destino»), <strong>3r</strong>{" "}
+          (opcional) el <strong>nom</strong> (pot dur comes). Separats per tab o 2+ espais.
+          La capçalera s&apos;ignora.
         </p>
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
           rows={8}
-          placeholder={"anton.davila@icmb.es    crisgomal@gmail.com\njavier.moreno@icmb.es    marcbenito@gmail.com"}
+          placeholder={"anton.davila@icmb.es    aalons41@xtec.cat    Anton Dávila\njavier.moreno@icmb.es    janguit4@xtec.cat    Javier Moreno"}
           className="w-full rounded-lg border border-neutral-300 bg-white p-3 font-mono text-sm outline-none focus:border-[#C15F3C] dark:border-neutral-700 dark:bg-neutral-900"
         />
         <div className="mt-3 flex items-center gap-3">
@@ -495,7 +508,10 @@ function GestioView({
               className="flex items-center justify-between gap-3 border-b border-neutral-100 px-3 py-2 last:border-0 dark:border-neutral-900"
             >
               <div className="min-w-0">
-                <span className="text-sm font-medium">{p.email}</span>
+                <span className="text-sm font-medium">{p.name || p.email}</span>
+                {p.name && (
+                  <span className="ml-2 text-xs text-neutral-500">{p.email}</span>
+                )}
                 {p.login_email && (
                   <span className="ml-2 text-xs text-neutral-400">
                     → {p.login_email}

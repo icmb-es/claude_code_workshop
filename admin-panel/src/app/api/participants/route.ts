@@ -21,7 +21,7 @@ export async function GET() {
   const cols = COLUMNS.join(", ");
   const surveyCols = SURVEY_COLUMNS.join(", ");
   const { rows } = await pool.query(
-    `SELECT email, login_email, ${cols}, spend_pct, survey_done, ${surveyCols}, updated_at
+    `SELECT email, name, login_email, ${cols}, spend_pct, survey_done, ${surveyCols}, updated_at
        FROM workshop.participants
       ORDER BY updated_at DESC`
   );
@@ -42,23 +42,29 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "falta rows[]" }, { status: 400 });
   }
 
-  const valid: { email: string; login: string }[] = [];
+  const valid: { email: string; login: string; name: string }[] = [];
   const invalid: string[] = [];
   for (const r of rawRows) {
     const email = normalizeEmail((r as { email?: unknown })?.email);
     const login = normalizeEmail((r as { loginEmail?: unknown })?.loginEmail);
-    if (email && login) valid.push({ email, login });
+    const rawName = (r as { name?: unknown })?.name;
+    const name = typeof rawName === "string" ? rawName.trim() : "";
+    if (email && login) valid.push({ email, login, name });
     else invalid.push(JSON.stringify(r));
   }
 
   let created = 0;
-  for (const { email, login } of valid) {
+  for (const { email, login, name } of valid) {
+    // Si el nom ve buit, no s'esborra el que ja hi hagués.
     await pool.query(
-      `INSERT INTO workshop.participants (email, login_email)
-       VALUES ($1, $2)
+      `INSERT INTO workshop.participants (email, login_email, name)
+       VALUES ($1, $2, $3)
        ON CONFLICT (email)
-       DO UPDATE SET login_email = EXCLUDED.login_email, updated_at = now()`,
-      [email, login]
+       DO UPDATE SET login_email = EXCLUDED.login_email,
+                     name = CASE WHEN EXCLUDED.name = '' THEN participants.name
+                                 ELSE EXCLUDED.name END,
+                     updated_at = now()`,
+      [email, login, name]
     );
     created++;
   }
