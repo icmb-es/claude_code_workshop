@@ -38,6 +38,7 @@ export default function Panel() {
   const [loadedAt, setLoadedAt] = useState<Date | null>(null);
   const [auto, setAuto] = useState(true);
   const [tab, setTab] = useState<Tab>("installacio");
+  const [onlyActive, setOnlyActive] = useState(false);
 
   const load = useCallback(async () => {
     try {
@@ -66,16 +67,31 @@ export default function Panel() {
     []
   );
 
+  // Vistes de seguiment: només participants amb un login @icmb associat (roster real).
+  const tracked = useMemo(
+    () => rows.filter((r) => /@icmb/i.test(String(r.login_email ?? ""))),
+    [rows]
+  );
+
+  // Filtre «només actius»: han fet almenys 1 pas.
+  const visible = useMemo(
+    () =>
+      onlyActive
+        ? tracked.filter((r) => STEPS.some((s) => r[s.key]))
+        : tracked,
+    [tracked, onlyActive]
+  );
+
   const perStep = useMemo(() => {
     const counts: Record<string, number> = {};
-    for (const s of STEPS) counts[s.key] = rows.filter((r) => r[s.key]).length;
+    for (const s of STEPS) counts[s.key] = visible.filter((r) => r[s.key]).length;
     return counts;
-  }, [rows]);
+  }, [visible]);
 
-  const fullyDone = rows.filter((r) => doneCount(r) === REQUIRED_STEPS.length).length;
+  const fullyDone = visible.filter((r) => doneCount(r) === REQUIRED_STEPS.length).length;
 
   // Enquesta inicial: entre els qui l'han completada, quants han dit «sí».
-  const surveyRows = rows.filter((r) => r.survey_done);
+  const surveyRows = visible.filter((r) => r.survey_done);
   const surveyCounts = useMemo(() => {
     const counts: Record<string, number> = {};
     for (const q of SURVEY) counts[q.key] = surveyRows.filter((r) => r[q.key]).length;
@@ -95,11 +111,21 @@ export default function Panel() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Seguiment del taller</h1>
           <p className="text-sm text-neutral-500">
-            {rows.length} participants · {fullyDone} llestos
+            {visible.length} participants
+            {onlyActive && " actius"} · {fullyDone} llestos
             {loadedAt && ` · actualitzat ${timeAgo(loadedAt.toISOString())}`}
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <label className="flex items-center gap-2 text-sm text-neutral-500">
+            <input
+              type="checkbox"
+              checked={onlyActive}
+              onChange={(e) => setOnlyActive(e.target.checked)}
+              className="h-4 w-4 accent-[#C15F3C]"
+            />
+            només actius
+          </label>
           <label className="flex items-center gap-2 text-sm text-neutral-500">
             <input
               type="checkbox"
@@ -145,10 +171,10 @@ export default function Panel() {
       )}
 
       {tab === "installacio" && (
-        <InstallacioView rows={rows} doneCount={doneCount} perStep={perStep} />
+        <InstallacioView rows={visible} doneCount={doneCount} perStep={perStep} />
       )}
 
-      {tab === "us" && <UsView rows={rows} />}
+      {tab === "us" && <UsView rows={visible} />}
 
       {tab === "gestio" && <GestioView rows={rows} onReload={load} />}
     </main>
